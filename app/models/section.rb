@@ -2,11 +2,10 @@ class Section < ActiveRecord::Base
 	belongs_to :story
 	has_one :content, dependent: :destroy
 	has_many :media, :order => 'position', dependent: :destroy
+	has_many :embeds, dependent: :destroy
   acts_as_list scope: :story
 
-  
-
-	TYPE = {content: 1, media: 2}
+	TYPE = {content: 1, media: 2, embed: 4}
  
 
   has_attached_file :audio,
@@ -25,19 +24,22 @@ class Section < ActiveRecord::Base
   validates :title, :presence => true, length: { maximum: 255, :message => 'Title max length is 255 symbols' } 	
 
 	def to_json(options={})
-     options[:except] ||= [:created_at, :updated_at]
-     super(options)
-   end
- before_post_process :transliterate_file_name
-   def get_str_type
-   	 TYPE.keys[TYPE.values.index(self.type_id)]
-   end
-   def content?
-   	 TYPE[:content] == self.type_id	
-   end
- def media?
-   	 TYPE[:media] == self.type_id	
-   end
+    options[:except] ||= [:created_at, :updated_at]
+    super(options)
+  end
+  before_post_process :transliterate_file_name
+  def get_str_type
+    TYPE.keys[TYPE.values.index(self.type_id)]
+  end
+  def content?
+    TYPE[:content] == self.type_id	
+  end
+  def media?
+    TYPE[:media] == self.type_id	
+  end
+  def embed?
+    TYPE[:embed] == self.type_id	
+  end
 
   
 
