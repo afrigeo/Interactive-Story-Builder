@@ -1,0 +1,20 @@
+<%= semantic_form_for(@item, url: embed_story_path(id:params[:id],:format => :js), :html => {:id => "embedForm"} ,remote: true) do |f| %>
+<%= error_messages_for f.object %>
+  <%= f.inputs do %>
+    <%= f.input :title, :placeholder => t('.placeholder.title'), :input_html => { :id => "embedTitle", title: t('.title.title') } %>
+    <%= f.input :url, :as => :url, :placeholder => t('.placeholder.url'), :input_html => { :id => "embedUrl", title: t('.title.url') } %>
+
+    <%= f.input :code, :as => :hidden , :input_html => { :id => "embedCode" }  %>
+
+    <%= f.input :section_id, :as => :hidden , :input_html => { :id => "embedSection" }  %>
+    <% if @item.id.present? %>
+      <%= f.input :id, :as => :hidden , :input_html => { :id => "embedId" }  %>    
+    <% end %>
+  <% end %>
+
+
+  <div class="pull-right spacer">    
+    <%= f.submit nil, :class => 'btn' %>
+    <%= f.submit nil, :class => 'btn', :type => :reset, :value => t('helpers.links.reset'), :name => :reset %>          
+  </div>
+<% end %>

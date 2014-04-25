@@ -32,6 +32,9 @@ BootstrapStarter::Application.routes.draw do
 				put 'media', to: 'stories#save_media'
 				post 'media', to: 'stories#new_media'				
 
+				put 'embed', to: 'stories#save_embed'
+				post 'embed', to: 'stories#new_embed'				
+
 				put 'section', to: 'stories#save_section'
 				post 'section', to: 'stories#new_section'	
 				post 'up', to: 'stories#up'

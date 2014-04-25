@@ -122,6 +122,10 @@ class StoriesController < ApplicationController
         @item = Section.new(story_id: params[:id], type_id: Section::TYPE[:content], has_marker: 1)
       end  
            
+      @section_list = []
+      Section::TYPE.each{|k,v| @section_list << [I18n.t("stories.section.#{k}"), v]} 
+      @section_list.sort_by!{|x| x[0]}
+           
       respond_to do |format|
         format.js { render :action => "get_section" }
       end
@@ -146,6 +150,17 @@ class StoriesController < ApplicationController
         end
         respond_to do |format|
           format.js {render :action => "get_media" }
+        end
+
+    elsif type == @form_types['embed']
+
+        if params[:command]!=@form_commands['new']    
+          @item = Embed.find_by_id(params[:item_id])   
+        else 
+          @item = Embed.new(:section_id => params[:section_id])
+        end
+        respond_to do |format|
+          format.js {render :action => "get_embed" }
         end
 
     end
@@ -179,6 +194,19 @@ class StoriesController < ApplicationController
           format.js { render action: "change_sub_tree", status: :created }                    
         else                    
           flash[:error] = u I18n.t('app.msgs.error_created', obj:Medium.model_name.human, err:@item.errors.full_messages.to_sentence)                       
+          format.js {render action: "flash" , status: :ok }
+        end
+      end    
+  end
+
+ def new_embed
+    @item = Embed.new(params[:embed])       
+    respond_to do |format|
+        if @item.save       
+          flash_success_created(Embed.model_name.human,@item.title)                     
+          format.js { render action: "change_sub_tree", status: :created }                    
+        else                    
+          flash[:error] = u I18n.t('app.msgs.error_created', obj:Embed.model_name.human, err:@item.errors.full_messages.to_sentence)                       
           format.js {render action: "flash" , status: :ok }
         end
       end    
@@ -238,6 +266,19 @@ class StoriesController < ApplicationController
         end
       end    
   end
+ def save_embed
+    @item = Embed.find_by_id(params[:embed][:id])
+    respond_to do |format|
+        if @item.update_attributes(params[:embed])          
+          flash_success_updated(Embed.model_name.human,@item.title)           
+          format.js {render action: "build_tree", status: :created }          
+        else        
+          flash[:error] = u I18n.t('app.msgs.error_updated', obj:Embed.model_name.human, err:@item.errors.full_messages.to_sentence)                                        
+          format.js {render action: "flash", status: :ok }
+        end
+      end    
+  end
+
     
   def destroy_tree_item  
     item = nil    

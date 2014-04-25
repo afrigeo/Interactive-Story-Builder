@@ -184,6 +184,7 @@ en:
     section:
       content: Content
       media: Full-Screen Media      
+      embed: Embed Online Media
       'yes': 'Yes'
       'no': 'No'
       placeholder:
@@ -201,10 +202,17 @@ en:
         sub_caption: Sub Caption (can be ommited)
         content: 'Article text, can be any styling html tag with styles'
       title:
-        title: "Title is only for section it doesn't affect story layout"
+        title: "This text only appears in the left sidebar, it will not show up in the story"
         caption: Caption of article will appear at the top of section (styled like header)
         sub_caption: Subcaption of article will appear below the caption (styled like sub header of caption)
         content: Text of the article (any custom css styling or html tag can be used for article content)
+    embed:
+      placeholder:
+        title: Embed online media name
+        url: Url to online media
+      title:
+        title: "This text only appears in the left sidebar, it will not show up in the story"
+        url: "The url to the online media you want to embed"
   storyteller:
     byline: By
     byline_media: "Photographs and video by "

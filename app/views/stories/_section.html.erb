@@ -6,7 +6,9 @@
 
 
 
-  <%= f.input :type_id, :as => :select,  :include_blank => false, :collection => { t('.content') => Section::TYPE[:content], t('.media') => Section::TYPE[:media] } , :input_html => { :id => "sectionType", title: t('.title.type')  }   %> 
+  <%= f.input :type_id, :as => :select,  :include_blank => false, 
+              :collection => @section_list, 
+              :input_html => { :id => "sectionType", title: t('.title.type')  }   %> 
 
   <%= f.input :has_marker, :as => :boolean , :input_html => { id: "sectionHasMarker", title: t('.title.has_marker')} %> 
        
