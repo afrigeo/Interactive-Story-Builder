@@ -114,9 +114,9 @@ class StoriesController < ApplicationController
   def get_data
     type = params[:type]
 
-    if type == 's'
+    if type == @form_types['section']
 
-      if params[:command]!='n'
+      if params[:command]!=@form_commands['new']
         @item = Section.find_by_id(params[:section_id])    
       else 
         @item = Section.new(story_id: params[:id], type_id: Section::TYPE[:content], has_marker: 1)
@@ -126,9 +126,9 @@ class StoriesController < ApplicationController
         format.js { render :action => "get_section" }
       end
 
-    elsif type == 'c'
+    elsif type == @form_types['content']
 
-      if params[:command]!='n'
+      if params[:command]!=@form_commands['new']
         @item = Content.find_by_id(params[:item_id])
       else 
         @item = Content.new(:section_id => params[:section_id], :content => '')
@@ -137,9 +137,9 @@ class StoriesController < ApplicationController
         format.js  {render :action => "get_content" }
       end
 
-    elsif type == 'm'
+    elsif type == @form_types['media']
 
-        if params[:command]!='n'    
+        if params[:command]!=@form_commands['new']    
           @item = Medium.find_by_id(params[:item_id])   
         else 
           @item = Medium.new(:section_id => params[:section_id], media_type: 1)
@@ -242,11 +242,11 @@ class StoriesController < ApplicationController
   def destroy_tree_item  
     item = nil    
     type = params[:type]
-    if type == 's'
+    if type == @form_types['section']
       item = Section.find_by_id(params[:section_id])               
-    elsif type == 'c'
+    elsif type == @form_types['content']
       item =  Content.find_by_id(params[:item_id])      
-    elsif type == 'm'      
+    elsif type == @form_types['media']      
       item = Medium.find_by_id(params[:item_id])           
     end
     item.destroy
@@ -262,18 +262,18 @@ class StoriesController < ApplicationController
     end
   end
   def up      
-    if params[:i] == '-1'
-      Section.where(story_id: params[:id]).find_by_id(params[:s]).move_higher            
+    if params[@form_types['item']] == '-1'
+      Section.where(story_id: params[:id]).find_by_id(params[@form_types['section']]).move_higher            
     else
-      Medium.where(section_id: params[:s]).find_by_id(params[:i]).move_higher            
+      Medium.where(section_id: params[@form_types['section']]).find_by_id(params[@form_types['item']]).move_higher            
     end
     render json: nil , status: :created    
   end
   def down  
-     if params[:i] == '-1'
-      Section.where(story_id: params[:id]).find_by_id(params[:s]).move_lower            
+     if params[@form_types['item']] == '-1'
+      Section.where(story_id: params[:id]).find_by_id(params[@form_types['section']]).move_lower            
     else
-      Medium.where(section_id: params[:s]).find_by_id(params[:i]).move_lower            
+      Medium.where(section_id: params[@form_types['section']]).find_by_id(params[@form_types['item']]).move_lower            
     end            
     render json: nil , status: :created    
   end

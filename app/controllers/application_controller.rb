@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
 	before_filter :set_locale
 	before_filter :is_browser_supported?
+	before_filter :preload_global_variables
 	before_filter :initialize_gon
 	after_filter :flash_to_headers
 	before_filter :store_location
@@ -57,9 +58,17 @@ logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
     { :locale => I18n.locale }
   end
 
+  def preload_global_variables
+    @form_types = {'section' => 's', 'content' => 'c', 'media' => 'm', 'embed' => 'e', 'item' => 'i'}
+    @form_commands = {'new' => 'n', 'save' => 's'}
+  end
+
 	def initialize_gon
 		gon.set = true
 		gon.highlight_first_form_field = true
+
+    gon.form_types = @form_types
+    gon.form_commands = @form_commands
 
 		if I18n.locale == :ka
 		  gon.datatable_i18n_url = "/datatable_ka.txt"

@@ -3,8 +3,8 @@
 	var section_id = -1;
 
 	var item_id = -1;
-	var el_type = 's';
-	var method = 'n';
+	var el_type = gon.form_types.section;
+	var method = gon.form_commands.new;
 
 $(document).ready(function() {
 
@@ -116,8 +116,10 @@ $(document).ready(function() {
 		return true;	
   });
 	$('#btnUp').click(function(){
-		if (el_type == 'c') return true;
-		var dataTemp = {'s' : section_id, 'i': item_id };
+		if (el_type == gon.form_types.content) return true;
+		var dataTemp = {};
+		dataTemp[gon.form_types.section] = section_id;
+		dataTemp[gon.form_types.item] = item_id;
 		$.ajax
 		({
 			url: 'up',			  
@@ -147,8 +149,10 @@ $(document).ready(function() {
 		}).error(function(e){ popuper("Changing order failed.","error");});	 	
 	});
 	$('#btnDown').click(function(){
-		if (el_type == 'c') return true;
-		var dataTemp = {'s' : section_id, 'i': item_id };
+		if (el_type == gon.form_types.content) return true;
+		var dataTemp = {};
+		dataTemp[gon.form_types.section] = section_id;
+		dataTemp[gon.form_types.item] = item_id;
 		$.ajax
 		({
 			url: 'down',			  
@@ -190,7 +194,7 @@ $(document).ready(function() {
 
 		var dataTemp = {'_method':'delete','section_id' : section_id, 'type':el_type };
 		
-		if(el_type!='s') 
+		if(el_type!=gon.form_types.section) 
 		{		
 			dataTemp['item_id'] = item_id;
 		}
@@ -224,7 +228,7 @@ $(document).ready(function() {
 	});
 
 
-	$('#btnAddSection').click(function(){ method = 'n';	el_type = 's';  getStory(-1,-1,1);});
+	$('#btnAddSection').click(function(){ method = gon.form_commands.new;	el_type = gon.form_types.section;  getStory(-1,-1,1);});
 
 	$('#btnAddItem').click(function(){	
 		var temp;
@@ -232,13 +236,13 @@ $(document).ready(function() {
 		else  { temp = $('.story-tree ul li.item[id='+ section_id + ']'); }
 		
 		var tempType = temp.data('type')[0];
-		if( tempType == 'c' && temp.has('ul').length==1 )
+		if( tempType == gon.form_types.content && temp.has('ul').length==1 )
 		{			
 			alert("Only one content can be added to content type section");
 		}
 		else 
 		{		
-			method = 'n';
+			method = gon.form_commands.new;
 			el_type = tempType;				
 			getData();
 		}	
@@ -258,14 +262,14 @@ function getStory(id , subid , state)
 
 	if(subid != -1)
 	{		
-		method = 's';		
+		method = gon.form_commands.save;		
 		getData();
 					
 	}
 	else if(id != -1)
 	{		
-		el_type='s';
-		method = 's';
+		el_type=gon.form_types.section;
+		method = gon.form_commands.save;
 		getData();					
 	}
 	else
@@ -275,7 +279,7 @@ function getStory(id , subid , state)
 		$('.story-tree ul li').removeClass('active');
 		if(state == 1) getData();
 		//if(el_type)
-		//el_type = 's'; 
+		//el_type = gon.form_types.section; 
 		//method = 'new';
 
 	}
@@ -284,7 +288,7 @@ function getData()
 {
 	var dataTemp = {'section_id' : section_id, 'command':method, 'type':el_type};
 	
-	if(el_type!='s') 
+	if(el_type!=gon.form_types.section) 
 	{		
 		dataTemp['item_id'] = item_id;
 	}
