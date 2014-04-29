@@ -207,12 +207,17 @@ en:
         sub_caption: Subcaption of article will appear below the caption (styled like sub header of caption)
         content: Text of the article (any custom css styling or html tag can be used for article content)
     embed:
+      get_media: Get Online Media
+      preview: Preview of Online Media
+      error: The URL could not be processed. Please try again.
       placeholder:
         title: Embed online media name
         url: Url to online media
       title:
         title: "This text only appears in the left sidebar, it will not show up in the story"
         url: "The url to the online media you want to embed"
+      hint:
+        url: "The following sites can used for embeding online media: AUDIO: Soundcloud, Spotify; VIDEO: Youtube, Vimeo, Twitch.TV, Dotsub, Dailymotion, LiveLeak, Vine, TED"
   storyteller:
     byline: By
     byline_media: "Photographs and video by "

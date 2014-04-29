@@ -2,7 +2,7 @@ class Section < ActiveRecord::Base
 	belongs_to :story
 	has_one :content, dependent: :destroy
 	has_many :media, :order => 'position', dependent: :destroy
-	has_many :embeds, dependent: :destroy
+	has_one :embed, dependent: :destroy
   acts_as_list scope: :story
 
 	TYPE = {content: 1, media: 2, embed: 4}

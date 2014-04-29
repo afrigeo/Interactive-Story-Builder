@@ -25,14 +25,16 @@
       <ul>
           <% @story.sections.each do |item| %>          
               <li id='<%= item.id %>' data-type='<%= item.get_str_type %>' class='item'><span><%= item.title %></span>                  
-                  <% if item.content? && item.content.present? %>
+                  <% if item.content.present? %>
                     <ul><li id='<%= item.content.id %>' class='sub'><span><%= item.content.title %></span></li></ul>
-                  <% elsif item.media? && item.media.present? %>
+                  <% elsif item.media.present? %>
                     <ul>
                         <% item.media.each do |subitem| %>                  
                         <li id='<%= subitem.id %>' class='sub'><span><%= subitem.title %></span></li>
                       <%end%>
                     </ul>
+                  <% elsif item.embed.present? %>
+                    <ul><li id='<%= item.embed.id %>' class='sub'><span><%= item.embed.title %></span></li></ul>
                   <%end%>
               </li>          
           <% end %>            

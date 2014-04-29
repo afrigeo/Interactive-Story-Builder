@@ -5,6 +5,7 @@
 	var item_id = -1;
 	var el_type = gon.form_types.section;
 	var method = gon.form_commands.new;
+  var timerCount = 0;
 
 $(document).ready(function() {
 
@@ -36,6 +37,18 @@ $(document).ready(function() {
 	$('.story-viewer').on('change','#mediaType',function(){
 		if($(this).val()==1) $('#mediaVideoBox').hide();
 		else  $('#mediaVideoBox').show();
+	});
+
+  $('.story-viewer').on('click', '#btnOlly', function(){
+    ths = $('#embedUrl');
+	  url = $(ths).val();
+    resetEmbedForm();
+    
+	  if (url.length > 0 && isUrl(url)){
+      olly.embed(url, document.getElementById("embedResult"), 'timerOllyCompelte', 'ollyFail');
+	  }else{
+      ollyFail();
+	  }
 	});
 
 	
@@ -238,7 +251,11 @@ $(document).ready(function() {
 		var tempType = temp.data('type')[0];
 		if( tempType == gon.form_types.content && temp.has('ul').length==1 )
 		{			
-			alert("Only one content can be added to content type section");
+			alert("Only one item can be added to a 'Content' section");
+		}
+		else if( tempType == gon.form_types.embed && temp.has('ul').length==1 )
+		{			
+			alert("Only one item can be added to an 'Embed Online Media' section");
 		}
 		else 
 		{		
@@ -247,7 +264,42 @@ $(document).ready(function() {
 			getData();
 		}	
 	});
+
 });
+
+function resetEmbedForm(){
+  timerCount = 0;
+  $('#embedCode').empty();
+  $('#embedResult').empty();
+  $('#embedButtons').hide();
+  $('#embedError').hide();
+}
+
+function ollyFail(){
+  resetEmbedForm();
+  $('#embedUrl').focus();
+  $('#embedError').show();
+}
+
+function timerOllyCompelte() {
+timerCount += 1;
+console.log('timerOllyCompelte - start; count = ' + timerCount);
+  if ($('#embedResult').html().length > 0){
+    $('#embedCode').val($('#embedResult').html());
+    $('#embedButtons').show();
+  }else{
+    setTimeout(function() {
+        timerOllyCompelte();
+    }, 500)
+  }
+
+}
+
+
+function isUrl(s) {
+  var regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+  return regexp.test(s);
+}
 
 function getStory(id , subid , state)
 {

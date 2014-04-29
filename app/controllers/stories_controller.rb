@@ -321,6 +321,8 @@ class StoriesController < ApplicationController
 
   def sections
       @story = Story.fullsection(params[:id])   
+      
+      @load_ollyjs = true
   end
 
   def publish

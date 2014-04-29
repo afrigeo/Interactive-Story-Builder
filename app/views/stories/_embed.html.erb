@@ -2,9 +2,21 @@
 <%= error_messages_for f.object %>
   <%= f.inputs do %>
     <%= f.input :title, :placeholder => t('.placeholder.title'), :input_html => { :id => "embedTitle", title: t('.title.title') } %>
-    <%= f.input :url, :as => :url, :placeholder => t('.placeholder.url'), :input_html => { :id => "embedUrl", title: t('.title.url') } %>
-
+    <%= f.input :url, :as => :url, :placeholder => t('.placeholder.url'), :hint => t('.hint.url'), :input_html => { :id => "embedUrl", title: t('.title.url') } %>
+    <button id="btnOlly" type="button" class="btn btn-info btn-mini" style="padding: 2px 6px"><%= t('.get_media') %></button>
     <%= f.input :code, :as => :hidden , :input_html => { :id => "embedCode" }  %>
+
+    <div id="embedPreview">
+      <h3><%= t('.preview') %></h3>
+      <div class="alert alert-error" id="embedError">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <%= t('.error') %>
+      </div>
+      <div id="embedResult">
+        <%= @item.code.html_safe if @item.code.present? %>
+      </div>
+    </div>
+
 
     <%= f.input :section_id, :as => :hidden , :input_html => { :id => "embedSection" }  %>
     <% if @item.id.present? %>
@@ -12,8 +24,13 @@
     <% end %>
   <% end %>
 
-
-  <div class="pull-right spacer">    
+  <% 
+    styles = '' 
+    if @item.code.blank? 
+      style = "style=display: none"
+     end 
+  %>
+  <div class="pull-right spacer" id="embedButtons" <%= style %>>    
     <%= f.submit nil, :class => 'btn' %>
     <%= f.submit nil, :class => 'btn', :type => :reset, :value => t('helpers.links.reset'), :name => :reset %>          
   </div>
